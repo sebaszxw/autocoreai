@@ -1,0 +1,1745 @@
+﻿<!doctype html>
+<html lang="es">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>AutoCore AI — Automatización con IA para negocios reales</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Syne:wght@600;700;800&family=DM+Sans:wght@300;400;500&display=swap" rel="stylesheet">
+<style>
+/* ================================================================
+   TOKENS
+================================================================ */
+:root{
+  --navy-deep:#011929;
+  --navy:#023047;
+  --navy-card:#021e30;
+  --navy-card-2:#02283d;
+  --gold:#ffb703;
+  --gold-dim:#ffb70322;
+  --gold-line:#ffb70333;
+  --ink:#f4f7fa;
+  --ink-dim:#8fa3b0;
+  --whatsapp:#25D366;
+  --r-sm:10px;
+  --r-md:16px;
+  --r-lg:22px;
+  --container:1480px;
+}
+
+*{box-sizing:border-box;margin:0;padding:0}
+html{scroll-behavior:smooth}
+body{
+  background:var(--navy-deep);
+  color:var(--ink);
+  font-family:'DM Sans',ui-sans-serif,system-ui,sans-serif;
+  font-weight:300;
+  line-height:1.55;
+  overflow-x:hidden;
+  cursor:none;
+}
+@media (hover:none){ body{cursor:auto} }
+a{color:inherit;text-decoration:none}
+button{font-family:inherit;cursor:none;border:0;background:none;color:inherit}
+@media (hover:none){ button{cursor:pointer} }
+img,svg{display:block;max-width:100%}
+
+/* type */
+h1,h2,h3,h4{font-family:'Syne',ui-sans-serif,system-ui,sans-serif;font-weight:800;letter-spacing:-.02em;line-height:1.05}
+.eyebrow{
+  font-family:'DM Sans',sans-serif;font-weight:500;
+  font-size:12px;letter-spacing:.28em;text-transform:uppercase;
+  color:var(--gold);
+}
+
+.container{max-width:var(--container);margin:0 auto;padding:0 48px}
+@media (max-width:720px){ .container{padding:0 22px} }
+
+/* ================================================================
+   CUSTOM CURSOR
+================================================================ */
+.cursor-dot,.cursor-ring{
+  position:fixed;top:0;left:0;pointer-events:none;z-index:9999;
+  transform:translate(-50%,-50%);
+  border-radius:50%;
+  will-change:transform;
+}
+.cursor-dot{
+  width:10px;height:10px;background:var(--gold);
+  mix-blend-mode:difference;
+  transition:width .2s ease,height .2s ease;
+}
+.cursor-ring{
+  width:36px;height:36px;border:1.5px solid #ffb70388;
+  transition:width .25s ease,height .25s ease,border-color .25s ease,background .25s ease;
+}
+.cursor-ring.hover{ width:56px;height:56px;border-color:var(--gold);background:#ffb70314 }
+@media (hover:none){ .cursor-dot,.cursor-ring{display:none} }
+
+/* ================================================================
+   NAV
+================================================================ */
+.nav{
+  position:fixed;top:0;left:0;right:0;z-index:50;
+  padding:18px 0;
+  background:transparent;
+  border-bottom:1px solid transparent;
+  transition:background .3s ease,border-color .3s ease,padding .3s ease,backdrop-filter .3s ease;
+}
+.nav.scrolled{
+  background:rgba(1,25,41,.85);
+  backdrop-filter:blur(16px);
+  -webkit-backdrop-filter:blur(16px);
+  border-bottom:1px solid var(--gold-line);
+  padding:14px 0;
+}
+.nav-inner{display:flex;align-items:center;justify-content:space-between;gap:24px}
+.logo{
+  font-family:'Syne',sans-serif;font-weight:800;font-size:22px;letter-spacing:-.01em;
+}
+.logo .gold{color:var(--gold)}
+.nav-links{display:flex;align-items:center;gap:32px}
+.nav-links a{
+  font-size:14px;color:var(--ink-dim);font-weight:400;
+  position:relative;padding:6px 0;
+  transition:color .25s ease;
+}
+.nav-links a::after{
+  content:"";position:absolute;left:0;right:0;bottom:-2px;height:1px;
+  background:var(--gold);transform:scaleX(0);transform-origin:left;
+  transition:transform .3s ease;
+}
+.nav-links a:hover,.nav-links a.active{color:var(--gold)}
+.nav-links a.active::after{transform:scaleX(1)}
+.btn{
+  display:inline-flex;align-items:center;gap:10px;
+  padding:12px 22px;border-radius:999px;
+  font-size:14px;font-weight:500;letter-spacing:.01em;
+  transition:transform .25s ease,box-shadow .25s ease,background .25s ease,color .25s ease,border-color .25s ease;
+  white-space:nowrap;
+}
+.btn-gold{background:var(--gold);color:var(--navy-deep);font-weight:500}
+.btn-gold:hover{transform:translateY(-2px);box-shadow:0 12px 32px -10px #ffb70355}
+.btn-outline{border:1px solid #ffffff33;color:var(--ink)}
+.btn-outline:hover{border-color:var(--gold);color:var(--gold)}
+.btn-outline-gold{border:1px solid var(--gold);color:var(--gold)}
+.btn-outline-gold:hover{background:var(--gold);color:var(--navy-deep)}
+.nav-cta{padding:10px 18px;font-size:13px}
+.mobile-menu-btn{display:none;width:40px;height:40px;border:1px solid #ffffff22;border-radius:10px;align-items:center;justify-content:center}
+
+@media (max-width:820px){
+  .nav-links{display:none}
+  .mobile-menu-btn{display:flex}
+}
+
+/* ================================================================
+   HERO
+================================================================ */
+.hero{
+  position:relative;
+  padding:160px 0 120px;
+  overflow:hidden;
+  isolation:isolate;
+}
+.hero-bg{position:absolute;inset:0;z-index:-1;pointer-events:none}
+.hero-grid{
+  position:absolute;inset:0;
+  background-image:
+    linear-gradient(to right,#ffb70309 1px,transparent 1px),
+    linear-gradient(to bottom,#ffb70309 1px,transparent 1px);
+  background-size:64px 64px;
+  -webkit-mask-image:radial-gradient(ellipse 70% 60% at 50% 40%,#000 30%,transparent 80%);
+          mask-image:radial-gradient(ellipse 70% 60% at 50% 40%,#000 30%,transparent 80%);
+}
+.hero-orb{
+  position:absolute;
+  width:720px;height:720px;
+  right:-220px;top:-160px;
+  background:radial-gradient(circle,#ffb70333 0%,#ffb70311 30%,transparent 60%);
+  filter:blur(20px);
+  animation:orbPulse 7s ease-in-out infinite;
+}
+.hero-orb-2{
+  position:absolute;
+  width:520px;height:520px;
+  left:-180px;bottom:-200px;
+  background:radial-gradient(circle,#02304766 0%,transparent 60%);
+  filter:blur(20px);
+}
+@keyframes orbPulse{
+  0%,100%{transform:scale(1);opacity:.9}
+  50%{transform:scale(1.08);opacity:1}
+}
+.hero-noise{
+  position:absolute;inset:0;opacity:.035;mix-blend-mode:overlay;
+  background-image:url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='160' height='160'><filter id='n'><feTurbulence type='fractalNoise' baseFrequency='.9' numOctaves='2' stitchTiles='stitch'/><feColorMatrix values='0 0 0 0 1 0 0 0 0 1 0 0 0 0 1 0 0 0 1 0'/></filter><rect width='100%' height='100%' filter='url(%23n)'/></svg>");
+}
+.hero-particles{position:absolute;inset:0;pointer-events:none}
+.particle{
+  position:absolute;border-radius:50%;
+  background:var(--gold);
+  animation:floatUp linear infinite;
+  will-change:transform,opacity;
+}
+@keyframes floatUp{
+  0%{transform:translate(0,0);opacity:0}
+  10%{opacity:var(--op,.3)}
+  90%{opacity:var(--op,.3)}
+  100%{transform:translate(var(--dx,20px),-120vh);opacity:0}
+}
+
+.hero-inner{
+  position:relative;
+  display:grid;
+  grid-template-columns:minmax(0,1fr) minmax(0,420px);
+  gap:32px;align-items:center;
+  max-width:1180px;margin:0 auto;
+}
+.hero-copy{display:flex;flex-direction:column;align-items:flex-start;gap:32px;min-width:0}
+.hero-visual{
+  position:relative;
+  display:flex;align-items:center;justify-content:center;
+  perspective:1200px;
+}
+@media (max-width:980px){
+  .hero-inner{grid-template-columns:1fr;gap:48px}
+  .hero-visual{order:2}
+}
+
+/* Chat mockup */
+.chat-mock{
+  position:relative;width:100%;max-width:400px;
+  background:linear-gradient(180deg,#02283d 0%,#021e30 100%);
+  border:1px solid var(--gold-line);
+  border-radius:24px;
+  padding:18px;
+  box-shadow:0 40px 90px -20px #00000099, 0 0 0 1px #ffb70322, 0 30px 60px -20px #ffb70322;
+  transform:rotate(-2deg) rotateY(-8deg) rotateX(4deg);
+  animation:chatFloat 6s ease-in-out infinite;
+  transform-style:preserve-3d;
+}
+@keyframes chatFloat{
+  0%,100%{transform:rotate(-2deg) rotateY(-8deg) rotateX(4deg) translateY(0)}
+  50%{transform:rotate(-2deg) rotateY(-8deg) rotateX(4deg) translateY(-12px)}
+}
+.chat-mock::before{
+  content:"";position:absolute;inset:-1px;border-radius:inherit;padding:1px;
+  background:linear-gradient(135deg,#ffb70388,transparent 40%,transparent 60%,#ffb70344);
+  -webkit-mask:linear-gradient(#000 0 0) content-box,linear-gradient(#000 0 0);
+          mask:linear-gradient(#000 0 0) content-box,linear-gradient(#000 0 0);
+  -webkit-mask-composite:xor;mask-composite:exclude;
+  pointer-events:none;
+}
+.chat-head{
+  display:flex;align-items:center;gap:12px;
+  padding:6px 8px 14px;
+  border-bottom:1px solid #ffffff10;
+  margin-bottom:14px;
+}
+.chat-avatar{
+  width:38px;height:38px;border-radius:50%;
+  background:linear-gradient(135deg,var(--gold),#d99700);
+  color:var(--navy-deep);
+  display:flex;align-items:center;justify-content:center;
+  font-size:18px;font-weight:700;
+  box-shadow:0 0 0 2px var(--navy-card);
+  position:relative;
+}
+.chat-avatar::after{
+  content:"";position:absolute;right:-1px;bottom:-1px;
+  width:11px;height:11px;border-radius:50%;
+  background:#25D366;border:2px solid var(--navy-card);
+}
+.chat-title{font-size:14px;font-weight:500;color:var(--ink)}
+.chat-sub{font-size:11px;color:#25D366;letter-spacing:.04em}
+.chat-body{display:flex;flex-direction:column;gap:10px;padding:0 4px 8px;min-height:260px}
+.bubble{
+  max-width:78%;padding:10px 14px;border-radius:16px;
+  font-size:13.5px;line-height:1.45;
+  opacity:0;transform:translateY(8px);
+  animation:bubbleIn .4s ease forwards;
+}
+.bubble.in{
+  background:#ffffff0e;border:1px solid #ffffff14;
+  color:#dbe3e8;
+  border-bottom-left-radius:4px;
+  align-self:flex-start;
+}
+.bubble.out{
+  background:var(--gold);color:var(--navy-deep);
+  border-bottom-right-radius:4px;
+  align-self:flex-end;font-weight:500;
+}
+.bubble.b1{animation-delay:.4s}
+.bubble.b2{animation-delay:1.4s}
+.bubble.b3{animation-delay:2.6s}
+.bubble.b4{animation-delay:3.8s}
+@keyframes bubbleIn{
+  to{opacity:1;transform:none}
+}
+.typing{
+  display:inline-flex;gap:4px;padding:12px 14px;
+  background:#ffffff0e;border:1px solid #ffffff14;
+  border-radius:16px;border-bottom-left-radius:4px;
+  align-self:flex-start;
+  opacity:0;animation:bubbleIn .4s ease forwards;animation-delay:5s;
+}
+.typing span{
+  width:6px;height:6px;border-radius:50%;background:#8fa3b0;
+  animation:typing 1.2s ease-in-out infinite;
+}
+.typing span:nth-child(2){animation-delay:.15s}
+.typing span:nth-child(3){animation-delay:.3s}
+@keyframes typing{
+  0%,60%,100%{transform:translateY(0);opacity:.4}
+  30%{transform:translateY(-4px);opacity:1}
+}
+.chat-input{
+  display:flex;align-items:center;gap:10px;
+  padding:10px 14px;
+  background:#ffffff08;border:1px solid #ffffff10;
+  border-radius:999px;margin-top:6px;
+  font-size:12.5px;color:#5a6970;
+}
+.chat-input .send{
+  margin-left:auto;width:26px;height:26px;border-radius:50%;
+  background:var(--gold);color:var(--navy-deep);
+  display:flex;align-items:center;justify-content:center;
+  font-size:12px;
+}
+
+/* Floating mini-cards around chat */
+.float-card{
+  position:absolute;
+  background:rgba(2,40,61,.85);
+  backdrop-filter:blur(10px);
+  border:1px solid var(--gold-line);
+  border-radius:14px;
+  padding:10px 14px;
+  display:flex;align-items:center;gap:10px;
+  font-size:12.5px;color:var(--ink);
+  box-shadow:0 20px 40px -12px #00000088;
+  z-index:2;
+}
+.float-card .ico{
+  width:28px;height:28px;border-radius:8px;
+  background:#ffb70322;color:var(--gold);
+  display:flex;align-items:center;justify-content:center;
+  font-size:14px;
+}
+.float-card .num{font-family:'Syne',sans-serif;font-weight:800;color:var(--gold);font-size:15px}
+.fc-1{top:-18px;left:-30px;animation:floaty 5s ease-in-out infinite}
+.fc-2{bottom:40px;right:-40px;animation:floaty 5s ease-in-out infinite .8s}
+@keyframes floaty{
+  0%,100%{transform:translateY(0)}
+  50%{transform:translateY(-8px)}
+}
+@media (max-width:520px){
+  .fc-1{left:-10px}
+  .fc-2{right:-10px}
+}
+.badge{
+  display:inline-flex;align-items:center;gap:10px;
+  padding:8px 16px;border-radius:999px;
+  background:#ffb70309;border:1px solid var(--gold-line);
+  font-size:13px;color:#e9d9b6;
+  font-weight:400;
+}
+.badge .dot{
+  width:8px;height:8px;border-radius:50%;background:var(--gold);
+  box-shadow:0 0 0 0 #ffb70388;
+  animation:blink 1.6s ease-in-out infinite;
+}
+@keyframes blink{
+  0%,100%{box-shadow:0 0 0 0 #ffb70388}
+  50%{box-shadow:0 0 0 8px #ffb70300}
+}
+#typed-text{display:inline-block;min-height:1em}
+.caret{display:inline-block;width:1px;height:1em;background:var(--gold);vertical-align:-2px;margin-left:2px;animation:caret 1s steps(1) infinite}
+.caret.gone{display:none}
+@keyframes caret{50%{opacity:0}}
+
+.h1{
+  font-size:clamp(44px,7.4vw,82px);
+  letter-spacing:-.03em;line-height:1.02;
+  text-wrap:balance;
+}
+.h1 .gold{color:var(--gold)}
+.h1 .glitch{
+  position:relative;display:inline-block;color:var(--gold);
+}
+.h1 .glitch::before,.h1 .glitch::after{
+  content:attr(data-text);position:absolute;left:0;top:0;width:100%;height:100%;
+  pointer-events:none;opacity:0;
+}
+.h1 .glitch::before{ color:#ff5d3a; transform:translate(-2px,0); clip-path:polygon(0 0,100% 0,100% 33%,0 33%); }
+.h1 .glitch::after { color:#3ad8ff; transform:translate(2px,0);  clip-path:polygon(0 66%,100% 66%,100% 100%,0 100%); }
+.h1 .glitch:hover::before{animation:glitchA .6s steps(2) 1;opacity:1}
+.h1 .glitch:hover::after{animation:glitchB .6s steps(2) 1;opacity:1}
+@keyframes glitchA{
+  0%{clip-path:polygon(0 0,100% 0,100% 12%,0 12%);transform:translate(-3px,0)}
+  20%{clip-path:polygon(0 28%,100% 28%,100% 35%,0 35%);transform:translate(2px,0)}
+  40%{clip-path:polygon(0 50%,100% 50%,100% 60%,0 60%);transform:translate(-2px,0)}
+  60%{clip-path:polygon(0 70%,100% 70%,100% 80%,0 80%);transform:translate(3px,0)}
+  100%{clip-path:polygon(0 0,100% 0,100% 0,0 0);transform:translate(0,0)}
+}
+@keyframes glitchB{
+  0%{clip-path:polygon(0 18%,100% 18%,100% 25%,0 25%);transform:translate(3px,0)}
+  30%{clip-path:polygon(0 42%,100% 42%,100% 50%,0 50%);transform:translate(-2px,0)}
+  60%{clip-path:polygon(0 65%,100% 65%,100% 75%,0 75%);transform:translate(2px,0)}
+  100%{clip-path:polygon(0 100%,100% 100%,100% 100%,0 100%);transform:translate(0,0)}
+}
+
+.lede{
+  font-size:clamp(16px,1.6vw,19px);
+  color:var(--ink-dim);max-width:620px;
+  text-wrap:pretty;
+}
+.cta-row{display:flex;gap:14px;flex-wrap:wrap}
+
+.stats{
+  display:grid;grid-template-columns:repeat(3,minmax(0,1fr));
+  gap:24px;width:100%;max-width:560px;
+  padding-top:28px;border-top:1px solid #ffffff10;
+  margin-top:8px;
+}
+.stat-num{font-family:'Syne',sans-serif;font-weight:800;font-size:clamp(34px,4.4vw,46px);color:var(--gold);letter-spacing:-.02em;line-height:1}
+.stat-num .suffix{color:var(--gold);font-size:.7em}
+.stat-label{font-size:12px;color:var(--ink-dim);letter-spacing:.18em;text-transform:uppercase;margin-top:8px}
+
+/* ================================================================
+   SECTIONS — base
+================================================================ */
+section{position:relative;padding:120px 0}
+.section-head{display:flex;flex-direction:column;align-items:center;gap:14px;text-align:center;margin-bottom:64px}
+.section-head h2{font-size:clamp(32px,4.4vw,52px);letter-spacing:-.02em}
+.section-head p{color:var(--ink-dim);max-width:580px;font-size:16px}
+
+/* ================================================================
+   SERVICIOS
+================================================================ */
+.cards-3{display:grid;grid-template-columns:repeat(3,1fr);gap:22px}
+.svc-card{
+  position:relative;overflow:hidden;isolation:isolate;
+  background:var(--navy-card);
+  border:1px solid #ffb70318;
+  border-radius:var(--r-lg);
+  padding:280px 30px 30px;
+  min-height:480px;
+  display:flex;flex-direction:column;justify-content:flex-end;
+  transition:transform .45s cubic-bezier(.2,.7,.2,1),box-shadow .45s ease,border-color .45s ease;
+}
+.svc-bg{
+  position:absolute;inset:0;z-index:-2;
+  background-size:cover;background-position:center;
+  transition:transform .9s cubic-bezier(.2,.7,.2,1),filter .6s ease;
+  filter:saturate(.85) brightness(.75);
+}
+.svc-card::after{
+  content:"";position:absolute;inset:0;z-index:-1;pointer-events:none;
+  background:
+    linear-gradient(180deg,rgba(1,25,41,.55) 0%,rgba(1,25,41,.35) 30%,rgba(1,25,41,.85) 65%,rgba(1,25,41,.96) 100%),
+    radial-gradient(ellipse 80% 50% at 50% 0%,rgba(2,40,61,.3),transparent 60%);
+  backdrop-filter:blur(.5px);
+}
+.svc-card::before{
+  content:"";position:absolute;top:0;left:0;right:0;height:2px;z-index:1;
+  background:linear-gradient(90deg,transparent,var(--gold),transparent);
+  transform:translateX(-100%);transition:transform .6s ease;
+}
+.svc-card:hover{
+  transform:translateY(-8px);
+  box-shadow:0 30px 70px -28px #00000099,0 0 0 1px var(--gold-line),0 20px 50px -20px #ffb70333;
+  border-color:var(--gold-line);
+}
+.svc-card:hover .svc-bg{transform:scale(1.06);filter:saturate(1) brightness(.85)}
+.svc-card:hover::before{transform:translateX(0)}
+.svc-card h3{
+  font-size:24px;margin-bottom:12px;color:var(--ink);
+  text-shadow:0 2px 16px rgba(0,0,0,.6);
+}
+.svc-card p{
+  color:#cbd5dd;font-size:15px;margin-bottom:22px;
+  text-shadow:0 1px 8px rgba(0,0,0,.55);
+}
+.tags{display:flex;flex-wrap:wrap;gap:8px}
+.tag{
+  font-size:12px;padding:5px 11px;border-radius:999px;
+  background:rgba(255,255,255,.06);border:1px solid rgba(255,255,255,.16);color:#e6ecf0;
+  letter-spacing:.02em;backdrop-filter:blur(8px);-webkit-backdrop-filter:blur(8px);
+}
+
+/* ================================================================
+   PROCESO — PREMIUM
+================================================================ */
+.process{
+  display:grid;grid-template-columns:repeat(3,1fr);gap:26px;
+  position:relative;padding-top:16px;
+}
+.process-line{
+  position:absolute;top:78px;left:calc(16.67% + 16px);right:calc(16.67% + 16px);
+  height:1px;
+  background:linear-gradient(90deg,transparent,#ffb70366 20%,#ffb70366 80%,transparent);
+  transform-origin:left;transform:scaleX(0);
+  transition:transform 1.2s cubic-bezier(.2,.7,.2,1) .2s;
+}
+.process.in-view .process-line{transform:scaleX(1)}
+.process-arrow{
+  position:absolute;top:50%;transform:translate(-50%,-50%);
+  opacity:0;transition:opacity .5s ease;
+  display:flex;align-items:center;justify-content:center;
+}
+.pa-1{left:33.33%}
+.pa-2{left:66.67%}
+.process.in-view .process-arrow{opacity:1;transition-delay:1.1s}
+
+.step{
+  position:relative;overflow:hidden;isolation:isolate;
+  background:var(--navy-card);
+  border:1px solid #ffffff10;
+  border-radius:var(--r-lg);
+  padding:30px 28px 28px;
+  z-index:1;
+  transition:transform .4s cubic-bezier(.2,.7,.2,1),
+             border-color .35s ease,
+             box-shadow .4s ease;
+}
+.step::before{
+  content:"";position:absolute;top:0;left:0;right:0;height:2px;z-index:2;
+  background:linear-gradient(90deg,transparent,var(--gold),transparent);
+  transform:scaleX(0);transform-origin:center;
+  transition:transform .5s cubic-bezier(.2,.7,.2,1);
+}
+.step::after{
+  content:"";position:absolute;inset:0;z-index:-1;pointer-events:none;
+  background:radial-gradient(ellipse 80% 60% at 50% 0%,rgba(255,183,3,.06),transparent 70%);
+  opacity:0;transition:opacity .4s ease;
+}
+.step:hover{
+  transform:translateY(-8px);
+  border-color:var(--gold-line);
+  box-shadow:0 28px 64px -20px rgba(0,0,0,.75),
+             0 0 0 1px var(--gold-line),
+             0 0 50px -12px rgba(255,183,3,.18);
+}
+.step:hover::before{transform:scaleX(1)}
+.step:hover::after{opacity:1}
+
+.step-icon{
+  width:54px;height:54px;flex-shrink:0;
+  border-radius:14px;
+  background:linear-gradient(135deg,#ffb70318,#ffb70308);
+  border:1px solid var(--gold-line);
+  display:flex;align-items:center;justify-content:center;
+  color:var(--gold);margin-bottom:22px;
+  transition:background .4s ease,box-shadow .4s ease,transform .4s cubic-bezier(.2,.7,.2,1);
+}
+.step-icon svg{width:22px;height:22px}
+.step:hover .step-icon{
+  background:linear-gradient(135deg,#ffb70328,#ffb70314);
+  box-shadow:0 8px 26px -8px rgba(255,183,3,.35);
+  transform:scale(1.06);
+}
+
+.step .num-bg{
+  position:absolute;right:8px;bottom:-28px;
+  font-family:'Syne',sans-serif;font-weight:800;font-size:150px;line-height:1;
+  color:var(--gold);opacity:.05;letter-spacing:-.04em;
+  pointer-events:none;
+  transition:opacity .4s ease;
+}
+.step:hover .num-bg{opacity:.09}
+
+.step-pill{
+  display:inline-flex;align-items:center;gap:8px;
+  padding:5px 12px;border-radius:999px;
+  background:#ffb70312;border:1px solid var(--gold-line);
+  font-size:11px;color:var(--gold);font-weight:500;letter-spacing:.2em;
+  margin-bottom:16px;
+}
+.step-pill .ring{
+  width:8px;height:8px;border-radius:50%;
+  background:var(--gold);
+  box-shadow:0 0 0 0 #ffb70366;
+  animation:blink 1.8s ease-in-out infinite;
+}
+.step h3{font-size:clamp(20px,2vw,24px);margin-bottom:10px;color:var(--ink);letter-spacing:-.01em}
+.step p{color:var(--ink-dim);font-size:15px;line-height:1.65;max-width:28ch}
+
+/* ================================================================
+   DEMOS
+================================================================ */
+.demo-card{
+  background:var(--navy-card);
+  border:1px solid #ffffff10;
+  border-radius:var(--r-lg);overflow:hidden;
+  transition:transform .35s ease,border-color .35s ease;
+}
+.demo-card:hover{transform:translateY(-4px);border-color:var(--gold-line)}
+.demo-thumb{
+  position:relative;aspect-ratio:16/10;
+  display:flex;align-items:center;justify-content:center;
+  overflow:hidden;
+}
+.demo-thumb.t1{background:radial-gradient(ellipse at 30% 30%,#0a3a5c,#011929 70%)}
+.demo-thumb.t2{background:radial-gradient(ellipse at 70% 30%,#3a2618,#1a0e08 70%)}
+.demo-thumb.t3{background:radial-gradient(ellipse at 50% 40%,#0a2a4a,#011929 70%)}
+.demo-thumb::after{
+  content:"";position:absolute;inset:0;
+  background-image:linear-gradient(#ffb70308 1px,transparent 1px);
+  background-size:100% 28px;opacity:.6;
+  -webkit-mask-image:linear-gradient(180deg,transparent,#000 40%,#000 60%,transparent);
+          mask-image:linear-gradient(180deg,transparent,#000 40%,#000 60%,transparent);
+}
+.demo-emoji{font-size:72px;filter:drop-shadow(0 8px 30px #00000066);position:relative;z-index:1}
+.demo-badge{
+  position:absolute;top:14px;left:14px;z-index:2;
+  display:inline-flex;align-items:center;gap:8px;
+  padding:6px 12px;border-radius:999px;
+  background:rgba(1,25,41,.7);border:1px solid var(--gold-line);
+  font-size:11px;color:var(--gold);letter-spacing:.16em;text-transform:uppercase;
+  backdrop-filter:blur(8px);
+}
+.demo-badge .dot{width:6px;height:6px;border-radius:50%;background:var(--gold);animation:blink 1.6s ease-in-out infinite}
+.play{
+  position:absolute;z-index:2;
+  width:64px;height:64px;border-radius:50%;
+  background:var(--gold);color:var(--navy-deep);
+  display:flex;align-items:center;justify-content:center;
+  transition:transform .3s ease,box-shadow .3s ease;
+  box-shadow:0 12px 30px -8px #ffb70355;
+}
+.play svg{width:22px;height:22px;margin-left:3px}
+.demo-card:hover .play{transform:scale(1.1);box-shadow:0 0 0 10px #ffb70322,0 18px 40px -8px #ffb70366}
+.demo-meta{padding:22px 24px}
+.demo-meta h3{font-size:19px;margin-bottom:6px}
+.demo-meta p{color:var(--ink-dim);font-size:14px}
+
+/* ================================================================
+   PRECIOS
+================================================================ */
+.pricing-bg{
+  position:absolute;inset:0;z-index:-1;overflow:hidden;
+  background:
+    radial-gradient(circle 600px at 20% 30%,#ffb70314,transparent 60%),
+    radial-gradient(circle 700px at 80% 70%,#02304755,transparent 60%),
+    radial-gradient(circle 500px at 50% 100%,#ffb70309,transparent 60%);
+  animation:meshShift 14s ease-in-out infinite;
+}
+@keyframes meshShift{
+  0%,100%{background-position:0% 0%,0% 0%,0% 0%}
+  50%{background-position:8% -4%,-6% 6%,4% -4%}
+}
+.plans{display:grid;grid-template-columns:repeat(3,1fr);gap:22px;align-items:stretch}
+.plan{
+  position:relative;
+  background:var(--navy-card);border:1px solid #ffffff10;
+  border-radius:var(--r-lg);padding:34px 30px;
+  display:flex;flex-direction:column;gap:18px;
+  transition:transform .35s ease,border-color .35s ease;
+}
+.plan:hover{transform:translateY(-4px)}
+.plan.featured{
+  border:1.5px solid var(--gold);
+  background:linear-gradient(180deg,#02283d 0%,var(--navy-card) 100%);
+  box-shadow:0 30px 80px -30px #ffb70344;
+  transform:translateY(-8px);
+}
+.plan.featured:hover{transform:translateY(-12px)}
+.plan-badge{
+  position:absolute;top:-13px;left:50%;transform:translateX(-50%);
+  background:var(--gold);color:var(--navy-deep);
+  font-size:11px;font-weight:500;letter-spacing:.18em;text-transform:uppercase;
+  padding:6px 14px;border-radius:999px;
+}
+.plan-name{font-family:'Syne',ui-sans-serif,system-ui,sans-serif;font-weight:800;font-size:clamp(30px,3.2vw,40px);color:var(--ink);letter-spacing:-.02em;text-transform:none;line-height:1;margin-bottom:6px}
+.plan-price{font-family:'Syne',sans-serif;font-weight:800;font-size:48px;letter-spacing:-.02em;color:var(--ink);line-height:1}
+.plan-price .cur{font-size:.5em;color:var(--ink-dim);font-weight:600;margin-right:4px;vertical-align:8px}
+.plan-price .unit{font-size:.32em;color:var(--ink-dim);font-weight:400;margin-left:6px;letter-spacing:.05em}
+.plan-tag{font-size:14px;color:var(--ink-dim);min-height:42px;text-wrap:pretty}
+.plan ul{list-style:none;display:flex;flex-direction:column;gap:10px;flex:1;padding:6px 0 4px;border-top:1px solid #ffffff0d;border-bottom:1px solid #ffffff0d;padding:18px 0}
+.plan li{display:flex;align-items:center;gap:12px;font-size:14.5px;color:#dbe3e8}
+.plan li.no{color:#5a6970;text-decoration:line-through;text-decoration-color:#ffffff22}
+.check,.cross{
+  width:18px;height:18px;border-radius:50%;
+  display:inline-flex;align-items:center;justify-content:center;
+  font-size:11px;flex-shrink:0;
+}
+.check{background:#ffb70322;color:var(--gold);border:1px solid var(--gold-line)}
+.cross{background:#ffffff06;color:#5a6970;border:1px solid #ffffff10}
+.plan .btn{width:100%;justify-content:center}
+
+/* ================================================================
+   CONTACTO
+================================================================ */
+.contact{
+  text-align:center;
+}
+.contact h2{font-size:clamp(34px,5vw,58px);letter-spacing:-.02em;margin-bottom:48px;text-wrap:balance}
+.contact-card{
+  max-width:640px;margin:0 auto;
+  background:linear-gradient(180deg,#02283d,var(--navy-card));
+  border:1px solid var(--gold-line);
+  border-radius:var(--r-lg);
+  padding:48px 40px;
+  position:relative;overflow:hidden;
+}
+.contact-card::before{
+  content:"";position:absolute;inset:-1px;border-radius:inherit;padding:1px;
+  background:linear-gradient(135deg,#ffb70355,transparent 40%,transparent 60%,#ffb70333);
+  -webkit-mask:linear-gradient(#000 0 0) content-box,linear-gradient(#000 0 0);
+          mask:linear-gradient(#000 0 0) content-box,linear-gradient(#000 0 0);
+  -webkit-mask-composite:xor;mask-composite:exclude;
+  pointer-events:none;
+}
+.contact-card h3{font-size:24px;margin-bottom:14px}
+.contact-card p{color:var(--ink-dim);margin-bottom:28px;font-size:15.5px;max-width:46ch;margin-left:auto;margin-right:auto}
+.contact-actions{display:flex;flex-direction:column;gap:12px;align-items:center}
+.btn-wa{
+  background:var(--whatsapp);color:#fff;font-weight:500;padding:14px 26px;
+  animation:waPulse 2.4s ease-in-out infinite;
+}
+.btn-wa:hover{transform:translateY(-2px)}
+@keyframes waPulse{
+  0%,100%{box-shadow:0 0 0 0 rgba(37,211,102,0)}
+  50%{box-shadow:0 0 0 14px rgba(37,211,102,.18)}
+}
+.btn-email{padding:14px 22px}
+
+/* ================================================================
+   CONTACTO V2 (premium 2-column)
+================================================================ */
+.contact-v2{padding:140px 0;position:relative;overflow:hidden}
+.contact-v2-bg{
+  position:absolute;inset:0;z-index:-1;pointer-events:none;
+  background:
+    radial-gradient(circle 700px at 10% 90%,#ffb70316,transparent 60%),
+    radial-gradient(circle 600px at 90% 10%,#02304766,transparent 60%);
+}
+.contact-v2-bg::after{
+  content:"";position:absolute;inset:0;
+  background-image:radial-gradient(#ffb70312 1px,transparent 1px);
+  background-size:32px 32px;
+  -webkit-mask-image:radial-gradient(ellipse 80% 70% at 50% 50%,#000 30%,transparent 80%);
+          mask-image:radial-gradient(ellipse 80% 70% at 50% 50%,#000 30%,transparent 80%);
+  opacity:.5;
+}
+.cv2-grid{display:grid;grid-template-columns:1fr 1fr;gap:72px;align-items:start}
+@media (max-width:980px){ .cv2-grid{grid-template-columns:1fr;gap:48px} }
+.cv2-eyebrow{
+  display:inline-flex;align-items:center;gap:10px;
+  padding:8px 16px;border-radius:999px;
+  background:#ffb70309;border:1px solid var(--gold-line);
+  font-size:12px;color:var(--gold);font-weight:500;letter-spacing:.22em;text-transform:uppercase;
+  margin-bottom:24px;
+}
+.cv2-eyebrow .dot{width:8px;height:8px;border-radius:50%;background:var(--gold);animation:blink 1.6s ease-in-out infinite}
+.cv2-title{font-family:'Syne',sans-serif;font-weight:800;font-size:clamp(34px,4.6vw,54px);letter-spacing:-.02em;line-height:1.05;margin-bottom:22px;text-wrap:balance}
+.cv2-title .gold{color:var(--gold)}
+.cv2-lede{color:var(--ink-dim);font-size:16.5px;max-width:46ch;margin-bottom:40px;text-wrap:pretty}
+.cv2-benefits{display:flex;flex-direction:column;gap:22px;margin-bottom:36px}
+.cv2-benefit{display:flex;gap:16px;align-items:flex-start}
+.cv2-bico{width:46px;height:46px;flex-shrink:0;border-radius:12px;background:#ffb70312;border:1px solid var(--gold-line);display:flex;align-items:center;justify-content:center;color:var(--gold)}
+.cv2-bico svg{width:20px;height:20px}
+.cv2-benefit h4{font-family:'Syne',sans-serif;font-weight:700;font-size:16px;color:var(--ink);margin-bottom:4px;letter-spacing:-.01em}
+.cv2-benefit p{color:var(--ink-dim);font-size:14px;margin:0}
+.cv2-wa{display:flex;align-items:center;gap:18px;padding:18px 22px;border-radius:16px;background:rgba(2,40,61,.55);border:1px solid rgba(255,255,255,.08);backdrop-filter:blur(12px)}
+.cv2-wa .ico{width:46px;height:46px;flex-shrink:0;border-radius:50%;background:#25D366;border:1px solid #25D36655;display:flex;align-items:center;justify-content:center;color:#fff;font-size:20px;box-shadow:0 6px 18px -6px rgba(37,211,102,.6)}
+.cv2-wa .meta{flex:1;min-width:0}
+.cv2-wa .meta strong{display:block;font-family:'Syne',sans-serif;font-weight:700;font-size:15px;color:var(--ink);margin-bottom:2px}
+.cv2-wa .meta span{color:var(--ink-dim);font-size:13px}
+.cv2-wa .btn{padding:10px 16px;font-size:13px}
+.cv2-form{position:relative;background:linear-gradient(180deg,rgba(2,40,61,.6),rgba(2,30,48,.6));border:1px solid rgba(255,255,255,.08);border-radius:24px;padding:40px;backdrop-filter:blur(14px);box-shadow:0 30px 80px -30px #00000099,0 0 0 1px #ffb70311}
+.cv2-form::before{content:"";position:absolute;inset:-1px;border-radius:inherit;padding:1px;pointer-events:none;background:linear-gradient(135deg,#ffb70344,transparent 30%,transparent 70%,#ffb70322);-webkit-mask:linear-gradient(#000 0 0) content-box,linear-gradient(#000 0 0);mask:linear-gradient(#000 0 0) content-box,linear-gradient(#000 0 0);-webkit-mask-composite:xor;mask-composite:exclude}
+.cv2-grid2{display:grid;grid-template-columns:1fr 1fr;gap:20px}
+.cv2-field{display:flex;flex-direction:column;gap:8px}
+.cv2-field.full{grid-column:1/-1}
+.cv2-field label{font-size:11.5px;color:var(--ink-dim);letter-spacing:.18em;text-transform:uppercase;font-weight:500}
+.cv2-field label .req{color:var(--gold);margin-left:3px}
+.cv2-input,.cv2-textarea,.cv2-select{width:100%;background:rgba(1,25,41,.55);border:1px solid rgba(255,255,255,.1);border-radius:12px;padding:14px 16px;color:var(--ink);font-family:inherit;font-size:14.5px;transition:border-color .25s,box-shadow .25s,background .25s;outline:none}
+.cv2-input::placeholder,.cv2-textarea::placeholder{color:#5a6970}
+.cv2-input:focus,.cv2-textarea:focus,.cv2-select:focus{border-color:var(--gold);box-shadow:0 0 0 4px #ffb70322;background:rgba(1,25,41,.7)}
+.cv2-textarea{min-height:120px;resize:vertical;line-height:1.5}
+.cv2-select{appearance:none;-webkit-appearance:none;background-image:url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='14' height='14' viewBox='0 0 24 24' fill='none' stroke='%238fa3b0' stroke-width='2'><path d='M6 9l6 6 6-6'/></svg>");background-repeat:no-repeat;background-position:right 16px center;padding-right:42px;cursor:none}
+.cv2-select option{background:var(--navy-deep);color:var(--ink)}
+.cv2-phone{position:relative;display:flex;align-items:center}
+.cv2-phone .flag{position:absolute;left:14px;top:50%;transform:translateY(-50%);font-size:14px;color:var(--ink-dim);pointer-events:none}
+.cv2-phone .cv2-input{padding-left:60px}
+.cv2-submit{width:100%;justify-content:center;padding:18px 28px;font-size:14.5px;font-weight:600;letter-spacing:.18em;text-transform:uppercase;margin-top:8px}
+.cv2-submit:hover{box-shadow:0 16px 44px -10px #ffb70366}
+.cv2-foot{display:flex;align-items:center;justify-content:center;gap:8px;margin-top:18px;font-size:12.5px;color:var(--ink-dim)}
+.cv2-foot svg{width:13px;height:13px;color:var(--gold)}
+@media (max-width:560px){ .cv2-form{padding:28px 22px} .cv2-grid2{grid-template-columns:1fr} .cv2-wa{flex-wrap:wrap} }
+
+/* ================================================================
+   FOOTER
+================================================================ */
+.foot{
+  border-top:1px solid var(--gold-line);
+  padding:32px 0;
+  font-size:13.5px;color:var(--ink-dim);
+}
+.foot-inner{display:flex;align-items:center;justify-content:space-between;gap:20px;flex-wrap:wrap}
+
+/* ================================================================
+   REVEAL
+================================================================ */
+.reveal{opacity:0;transform:translateY(32px);transition:opacity .9s ease,transform .9s cubic-bezier(.2,.7,.2,1)}
+.reveal.in{opacity:1;transform:none}
+.reveal.d1{transition-delay:.1s}
+.reveal.d2{transition-delay:.2s}
+.reveal.d3{transition-delay:.3s}
+
+/* ================================================================
+   RESPONSIVE
+================================================================ */
+@media (max-width:980px){
+  .cards-3,.process,.plans{grid-template-columns:1fr}
+  .process-line{display:none}
+  .plan.featured{transform:none}
+  .plan.featured:hover{transform:translateY(-4px)}
+  section{padding:80px 0}
+  .hero{padding:130px 0 80px}
+  .stats{grid-template-columns:repeat(3,1fr);gap:14px}
+  .stat-num{font-size:30px}
+}
+@media (max-width:520px){
+  .stats{grid-template-columns:1fr 1fr 1fr}
+  .stat-label{font-size:10px;letter-spacing:.14em}
+  .contact-card{padding:36px 22px}
+  .nav-cta{display:none}
+}
+</style>
+</head>
+<body>
+
+<!-- CUSTOM CURSOR -->
+<div class="cursor-dot" id="cdot"></div>
+<div class="cursor-ring" id="cring"></div>
+
+<!-- ========== NAV ========== -->
+<header class="nav" id="nav">
+  <div class="container nav-inner">
+    <a href="#top" class="logo" style="font-family: system-ui">Auto<span class="gold">Core AI</span></a>
+    <nav class="nav-links" id="navLinks">
+      <a href="#servicios" data-target="servicios">Servicios</a>
+      <a href="#proceso"   data-target="proceso">Proceso</a>
+      <a href="#demos"     data-target="demos">Demos</a>
+      <a href="#precios"   data-target="precios">Precios</a>
+      <a href="#contacto"  data-target="contacto">Contacto</a>
+    </nav>
+    <a href="#contacto" class="btn btn-gold nav-cta">Empezar →</a>
+    <button class="mobile-menu-btn" aria-label="Menú">
+      <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M4 7h16M4 12h16M4 17h16"/></svg>
+    </button>
+  </div>
+</header>
+
+<!-- ========== HERO ========== -->
+<section class="hero" id="top">
+  <div class="hero-bg">
+    <div class="hero-grid"></div>
+    <div class="hero-orb"></div>
+    <div class="hero-orb-2"></div>
+    <div class="hero-noise"></div>
+    <div class="hero-particles" id="particles"></div>
+  </div>
+  <div class="container hero-inner">
+   <div class="hero-copy">
+    <div class="badge reveal">
+      <span class="dot"></span>
+      <span><span id="typed-text">Automatizamos atención, reservas y ventas para que no pierdas clientes y satisfacerlos con una pagina web profesional.</span><span class="caret" id="caret"></span></span>
+    </div>
+
+<h1 class="h1 reveal d1" style="font-family: system-ui; font-size: 80px;">
+  <span style="color: white;">Tu negocio trabajando</span>
+  <span style="color: #ffb703;">incluso cuando duermes</span>
+</h1>
+    <p class="lede reveal d2">Creamos páginas web, chatbots y sistemas automáticos para negocios que quieren crecer.</p>
+
+    <div class="cta-row reveal d3">
+      <a href="#demos" class="btn btn-gold">Ver demos en vivo →</a>
+      <a href="#contacto" class="btn btn-outline">Hablar con nosotros</a>
+    </div>
+
+    <div class="stats reveal d3">
+      <div>
+        <div class="stat-num" style="font-family: system-ui"><span class="counter" data-to="24"> 24</span><span class="suffix">/7</span></div>
+        <div class="stat-label">Disponibilidad</div>
+      </div>
+      <div>
+        <div class="stat-num" style="font-family: system-ui"><span class="counter" data-to="3">    3</span><span class="suffix">x</span></div>
+        <div class="stat-label">Más conversiones</div>
+      </div>
+      <div>
+        <div class="stat-num" style="font-family: system-ui"> −70%</div>
+        <div class="stat-label">Tiempo en tareas</div>
+      </div>
+    </div>
+   </div>
+   <div class="hero-visual reveal d2">
+     <div class="float-card fc-1">
+       <span class="ico">💬</span>
+       <div>
+         <div style="font-size:11px;color:var(--ink-dim);letter-spacing:.1em">RESPUESTA</div>
+         <div><span class="num" style="font-family: system-ui">2.3s</span> promedio</div>
+       </div>
+     </div>
+     <div class="chat-mock">
+       <div class="chat-head">
+         <div class="chat-avatar">A</div>
+         <div>
+           <div class="chat-title">AutoCore Bot</div>
+           <div class="chat-sub">● en línea</div>
+         </div>
+       </div>
+       <div class="chat-body">
+         <div class="bubble in b1">¡Hola! 👋 Soy el asistente de tu negocio. ¿En qué te ayudo?</div>
+         <div class="bubble out b2">Quiero reservar mesa para 4 esta noche</div>
+         <div class="bubble in b3">¡Perfecto! Tengo disponibilidad a las 8:00 y 9:30 PM. ¿Cuál prefieres?</div>
+         <div class="bubble out b4">8:00 PM 🍽️</div>
+         <div class="typing"><span></span><span></span><span></span></div>
+       </div>
+       <div class="chat-input">
+         Escribe un mensaje...
+         <span class="send">→</span>
+       </div>
+     </div>
+     <div class="float-card fc-2">
+       <span class="ico">⚡</span>
+       <div>
+         <div style="font-size:11px;color:var(--ink-dim);letter-spacing:.1em">CONVERSIONES</div>
+         <div><span class="num" style="font-family: system-ui">+312%</span> este mes</div>
+       </div>
+     </div>
+   </div>
+  </div>
+</section>
+<section id="servicios">
+  <div class="container">
+    <div class="section-head reveal">
+      <span class="eyebrow">Lo que hacemos</span>
+      <h2 style="font-family: system-ui">Tres servicios. Un impacto real.</h2>
+      <p>Soluciones diseñadas para PYMEs que quieren crecer sin contratar más equipo.</p>
+    </div>
+    <div class="cards-3">
+      <article class="svc-card reveal d1">
+        <div class="svc-bg" style="background-image:url('assets/svc-chatbot.png')"></div>
+        <h3 style="font-family: system-ui">Chatbot para tu negocio</h3>
+        <p>Atiende clientes en WhatsApp 24/7, gestiona reservas y responde con la voz de tu marca.</p>
+        <div class="tags">
+          <span class="tag">WhatsApp</span><span class="tag">Reservas</span>
+          <span class="tag">24/7</span><span class="tag">IA</span>
+        </div>
+      </article>
+      <article class="svc-card reveal d2">
+        <div class="svc-bg" style="background-image: url(&#39;assets/svc-landing.png&#39;); border-width: 1px; border-style: solid; border-color: rgb(249, 155, 7)"></div>
+        <h3 style="font-family: system-ui">Landing pages premium</h3>
+        <p>Páginas rápidas y modernas pensadas para convertir, no solo para verse bien.</p>
+        <div class="tags">
+          <span class="tag">Diseño moderno</span><span class="tag">Mobile-first</span>
+          <span class="tag">SEO</span>
+        </div>
+      </article>
+      <article class="svc-card reveal d3">
+        <div class="svc-bg" style="background-image:url('assets/svc-automation.png')"></div>
+        <h3 style="font-family: system-ui">Automatizaciones</h3>
+        <p>Conectamos tus herramientas para que el trabajo repetitivo desaparezca de tu día.</p>
+        <div class="tags">
+          <span class="tag">Google Sheets</span><span class="tag">Email auto</span>
+          <span class="tag">Citas</span>
+        </div>
+      </article>
+    </div>
+  </div>
+</section>
+
+<!-- ========== PROCESO ========== -->
+<section id="proceso">
+  <div class="container">
+    <div class="section-head reveal">
+      <span class="eyebrow">El proceso</span>
+      <h2 style="font-family: system-ui">Simple. Rápido. Efectivo.</h2>
+      <p>De la primera conversación al lanzamiento, sin vueltas innecesarias.</p>
+    </div>
+    <div class="process" id="process">
+      <div class="process-line">
+        <span class="process-arrow pa-1" aria-hidden="true">
+          <svg viewBox="0 0 18 18" fill="none" width="18" height="18"><circle cx="9" cy="9" r="5" fill="#ffb703" fill-opacity=".18" stroke="#ffb703" stroke-width="1.5"/><circle cx="9" cy="9" r="2" fill="#ffb703"/></svg>
+        </span>
+        <span class="process-arrow pa-2" aria-hidden="true">
+          <svg viewBox="0 0 18 18" fill="none" width="18" height="18"><circle cx="9" cy="9" r="5" fill="#ffb703" fill-opacity=".18" stroke="#ffb703" stroke-width="1.5"/><circle cx="9" cy="9" r="2" fill="#ffb703"/></svg>
+        </span>
+      </div>
+
+      <article class="step reveal d1">
+        <div class="step-icon">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></svg>
+        </div>
+        <span class="num-bg">01</span>
+        <span class="step-pill"><span class="ring"></span> PASO 01</span>
+        <h3 style="font-family: system-ui">Nos contactas</h3>
+        <p>Cuéntanos sobre tu negocio por WhatsApp. Sin formularios largos ni llamadas frías.</p>
+      </article>
+
+      <article class="step reveal d2">
+        <div class="step-icon">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 20h9"/><path d="M16.5 3.5a2.121 2.121 0 0 1 3 3L7 19l-4 1 1-4L16.5 3.5z"/></svg>
+        </div>
+        <span class="num-bg">02</span>
+        <span class="step-pill"><span class="ring"></span> PASO 02</span>
+        <h3 style="font-family: system-ui">Diseñamos juntos</h3>
+        <p>En 48h tienes una propuesta personalizada con alcance, plazos y precio claro.</p>
+      </article>
+
+      <article class="step reveal d3">
+        <div class="step-icon">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4.5 16.5c-1.5 1.26-2 5-2 5s3.74-.5 5-2c.71-.84.7-2.13-.09-2.91a2.18 2.18 0 0 0-2.91-.09z"/><path d="M12 15l-3-3a22 22 0 0 1 2-3.95A12.88 12.88 0 0 1 22 2c0 2.72-.78 7.5-6 11a22.35 22.35 0 0 1-4 2z"/><path d="M9 12H4s.55-3.03 2-4c1.62-1.08 5 0 5 0"/><path d="M12 15v5s3.03-.55 4-2c1.08-1.62 0-5 0-5"/></svg>
+        </div>
+        <span class="num-bg">03</span>
+        <span class="step-pill"><span class="ring"></span> PASO 03</span>
+        <h3 style="font-family: system-ui">Lanzamos</h3>
+        <p>Tu automatización activa en menos de 7 días, con soporte para los primeros ajustes.</p>
+      </article>
+    </div>
+  </div>
+</section>
+
+<!-- ========== DEMOS ========== -->
+<section id="demos">
+  <div class="container">
+    <div class="section-head reveal">
+      <span class="eyebrow">Demos en acción</span>
+      <h2 style="font-family: system-ui">Míralo antes de decidir.</h2>
+      <p>Tres demos reales que puedes ver antes de contratarnos.</p>
+    </div>
+    <div class="cards-3">
+
+      <!-- Demo 1: Chatbot WhatsApp para Restaurantes -->
+      <article class="demo-card reveal d1">
+        <div class="demo-video-wrap">
+          <iframe
+            src="https://www.youtube-nocookie.com/embed/Sh_iZLLoN8Q?rel=0&modestbranding=1"
+            title="Chatbot WhatsApp para Restaurantes"
+            frameborder="0"
+            allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
+            referrerpolicy="no-referrer-when-downgrade"
+            allowfullscreen>
+          </iframe>
+        </div>
+        <div class="demo-meta">
+          <h3 style="font-family: system-ui; font-size: 21px">Chatbot WhatsApp para Restaurantes</h3>
+          <p>Automatiza reservas, respuestas frecuentes y atención al cliente directamente desde WhatsApp.</p>
+          <a href="https://wa.me/51944377600?text=Hola%20quiero%20informaci%C3%B3n%20sobre%20AutoCore%20AI"
+             class="btn btn-outline-gold demo-cta"
+             target="_blank" rel="noopener">
+            Quiero esto para mi negocio →
+          </a>
+        </div>
+      </article>
+
+      <!-- Demo 2: Landing Page Premium para Barberías -->
+      <article class="demo-card reveal d2">
+        <div class="demo-video-wrap">
+          <iframe
+            src="https://www.youtube-nocookie.com/embed/L2ZqUnnBTFo?rel=0&modestbranding=1"
+            title="Landing Page Premium para Barberías"
+            frameborder="0"
+            allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
+            referrerpolicy="no-referrer-when-downgrade"
+            allowfullscreen>
+          </iframe>
+        </div>
+        <div class="demo-meta">
+          <h3 style="font-family: system-ui; font-size: 21px">Landing Page Premium para Barberías</h3>
+          <p>Página moderna y profesional para mostrar servicios, recibir reservas y mejorar la presencia online.</p>
+          <a href="https://wa.me/51944377600?text=Hola%20quiero%20informaci%C3%B3n%20sobre%20AutoCore%20AI"
+             class="btn btn-outline-gold demo-cta"
+             target="_blank" rel="noopener">
+            Quiero esto para mi negocio →
+          </a>
+        </div>
+      </article>
+
+      <!-- Demo 3: Automatización de Reservas -->
+      <article class="demo-card reveal d3">
+        <div class="demo-video-wrap">
+          <iframe
+            src="https://www.youtube-nocookie.com/embed/z8J4P-WEftA?rel=0&modestbranding=1"
+            title="Automatización de Reservas"
+            frameborder="0"
+            allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
+            referrerpolicy="no-referrer-when-downgrade"
+            allowfullscreen>
+          </iframe>
+        </div>
+        <div class="demo-meta">
+          <h3 style="font-family: system-ui; font-size: 21px">Automatización de Reservas</h3>
+          <p>Sistema visual para gestionar citas, clientes, horarios y confirmaciones automáticas.</p>
+          <a href="https://wa.me/51944377600?text=Hola%20quiero%20informaci%C3%B3n%20sobre%20AutoCore%20AI"
+             class="btn btn-outline-gold demo-cta"
+             target="_blank" rel="noopener">
+            Quiero esto para mi negocio →
+          </a>
+        </div>
+      </article>
+
+    </div>
+  </div>
+</section>
+
+<!-- ========== PRECIOS ========== -->
+<section id="precios">
+  <div class="pricing-bg"></div>
+  <div class="container">
+    <div class="section-head reveal">
+      <span class="eyebrow">Inversión</span>
+      <h2 style="font-family: system-ui">Elige el plan para tu negocio.</h2>
+      <p>Soluciones claras, sin sorpresas. Empieza con lo que necesitas hoy.</p>
+    </div>
+    <div class="plans">
+
+      <!-- CORE -->
+      <div class="plan reveal d1">
+<span class="plan-name" style="font-family: system-ui; color: white; font-size: 45px;">Core</span>
+
+<div class="plan-price" style="font-family: system-ui; color: #ffb703;">
+  <span class="cur" style="font-family: system-ui; color: #ffb703;">S/</span>499
+</div>
+
+        <p class="plan-price-sub">Pago único</p>
+        <p class="plan-tag">Ideal para negocios que quieren verse profesionales online.</p>
+        <ul>
+          <li><span class="check">✓</span> Página web personalizada</li>
+          <li><span class="check">✓</span> Diseño adaptable a celular y computadora</li>
+          <li><span class="check">✓</span> Botón directo a WhatsApp</li>
+          <li><span class="check">✓</span> Formulario de contacto funcional</li>
+          <li><span class="check">✓</span> Integración con Instagram y Facebook</li>
+          <li><span class="check">✓</span> SEO básico</li>
+          <li><span class="check">✓</span> Dominio opcional</li>
+          <li><span class="check">✓</span> Entrega rápida</li>
+        </ul>
+        <div class="plan-pay-monthly">
+          <span class="plan-pay-or">O elige pago mensual</span>
+          <div class="plan-pay-monthly-price" style="font-family:system-ui">S/99<span>/mes</span></div>
+          <span class="plan-pay-monthly-label">Incluye:</span>
+          <ul class="plan-addon-list">
+            <li>Hosting</li>
+            <li>Soporte básico</li>
+            <li>Cambios pequeños</li>
+            <li>Actualizaciones básicas</li>
+            <li>Monitoreo general</li>
+          </ul>
+        </div>
+        <a href="https://wa.me/51944377600?text=Hola%2C%20me%20interesa%20el%20Plan%20Core%20de%20AutoCore%20AI%20(S%2F499%20pago%20%C3%BAnico%20o%20S%2F99%2Fmes).%20Quisiera%20m%C3%A1s%20informaci%C3%B3n." class="btn btn-outline-gold" target="_blank" rel="noopener">Elegir Core</a>
+      </div>
+
+      <!-- PRO -->
+      <div class="plan featured reveal d2">
+        <span class="plan-badge">Más popular</span>
+<span class="plan-name" style="font-family: system-ui; color: white; font-size: 45px;">Pro</span>
+<div class="plan-price" style="font-family: system-ui; color: #ffb703;">
+  <span class="cur" style="font-family: system-ui; color: #ffb703;">S/</span>1399+
+</div>
+<p class="plan-tag">Automatiza atención y consigue clientes automáticamente.</p>
+        <ul>
+          <li><span class="check">✓</span> Todo lo del Plan Core</li>
+          <li><span class="check">✓</span> Responde clientes por WhatsApp las 24 horas</li>
+          <li><span class="check">✓</span> Reservas y horarios automáticos</li>
+          <li><span class="check">✓</span> Organiza y da seguimiento a tus clientes</li>
+          <li><span class="check">✓</span> Recordatorios y correos automáticos</li>
+          <li><span class="check">✓</span> Procesos personalizados para tu negocio</li>
+          <li><span class="check">✓</span> Acompañamiento en el lanzamiento</li>
+        </ul>
+        <a href="https://wa.me/51944377600?text=Hola%2C%20me%20interesa%20el%20Plan%20Pro%20de%20AutoCore%20AI%20(desde%20S%2F1%2C399%2B).%20Quisiera%20m%C3%A1s%20informaci%C3%B3n." class="btn btn-gold" target="_blank" rel="noopener">Elegir Pro</a>
+      </div>
+
+      <!-- BUSINESS -->
+      <div class="plan reveal d3">
+<span class="plan-name" style="font-family: system-ui; color: white; font-size: 45px;">Business</span>
+        <div class="plan-price-text" style="font-family: system-ui; color: #ffb703;">
+  Cotización<br>personalizada
+</div>
+        <p class="plan-tag">Soluciones avanzadas para empresas que quieren crecer y automatizar más procesos.</p>
+        <ul>
+          <li><span class="check">✓</span> Todo completamente personalizado</li>
+          <li><span class="check">✓</span> Automatizaciones avanzadas para ventas y operaciones</li>
+          <li><span class="check">✓</span> Sistemas conectados automáticamente</li>
+          <li><span class="check">✓</span> Procesos personalizados para tu negocio</li>
+          <li><span class="check">✓</span> Seguimiento y optimización continua</li>
+          <li><span class="check">✓</span> Prioridad de soporte</li>
+          <li><span class="check">✓</span> Implementación escalable</li>
+          <li><span class="check">✓</span> Reunión estratégica personalizada</li>
+          <li><span class="check">✓</span> 1 mes de Publicidad Inteligente incluido</li>
+        </ul>
+        <a href="https://wa.me/51944377600?text=Hola%2C%20me%20interesa%20el%20Plan%20Business%20de%20AutoCore%20AI.%20Quisiera%20recibir%20una%20cotizaci%C3%B3n%20personalizada." class="btn btn-outline-gold" target="_blank" rel="noopener">Solicitar cotización</a>
+      </div>
+
+    </div>
+
+    <!-- TRUST STRIP -->
+    <div class="plans-trust reveal">
+      <span><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="15" height="15"><path d="M20 6L9 17l-5-5"/></svg> Sin contratos largos</span>
+      <span class="plans-trust-dot">·</span>
+      <span><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="15" height="15"><path d="M12 2L4 6v6c0 5 3.5 9 8 10 4.5-1 8-5 8-10V6l-8-4z"/></svg> Soporte incluido</span>
+      <span class="plans-trust-dot">·</span>
+      <span><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="15" height="15"><circle cx="12" cy="12" r="10"/><path d="M12 8v4l3 3"/></svg> Entrega en menos de 7 días</span>
+      <span class="plans-trust-dot">·</span>
+      <span><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="15" height="15"><rect x="3" y="11" width="18" height="11" rx="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/></svg> 100% seguro y confidencial</span>
+    </div>
+
+    <!-- PUBLICIDAD INTELIGENTE -->
+    <div class="pricing-addon reveal">
+      <div class="pricing-addon-left">
+        <span class="eyebrow" style="display:block;margin-bottom:12px">Servicio adicional</span>
+        <h3 class="pricing-addon-h3" style="font-family: system-ui">Publicidad Inteligente</h3>
+        <p class="pricing-addon-desc">Creamos campañas en Google para ayudarte a atraer más clientes.</p>
+        <p class="pricing-addon-note">* El presupuesto publicitario es pagado directamente por el cliente.</p>
+      </div>
+      <ul class="pricing-addon-ul">
+        <li><span class="check">✓</span> Configuración de campañas</li>
+        <li><span class="check">✓</span> Creación de anuncios optimizados</li>
+        <li><span class="check">✓</span> Conexión con WhatsApp o página web</li>
+        <li><span class="check">✓</span> Segmentación de cliente potenciales</li>
+        <li><span class="check">✓</span> Optimización y seguimiento básico</li>
+      </ul>
+      <div class="pricing-addon-prices">
+        <div class="pricing-addon-price-item">
+          <span class="pricing-addon-label">Setup inicial</span>
+          <span class="pricing-addon-amount" style="font-family: system-ui"><span style="font-size:.55em;color: #ffb703;vertical-align:6px">S/ </span>999</span>
+        </div>
+        <div class="pricing-addon-divider"></div>
+        <div class="pricing-addon-price-item">
+          <span class="pricing-addon-label">Gestión mensual</span>
+          <span class="pricing-addon-amount pricing-addon-amount-sm" style="font-family: system-ui">S/500 – S/1500<span class="pricing-addon-mes">/mes</span></span>
+        </div>
+        <a href="#contacto" class="btn btn-outline-gold" style="align-self:flex-start;margin-top:6px;font-size:13px;padding:10px 18px">Saber más →</a>
+      </div>
+    </div>
+
+  </div>
+</section>
+<!-- ========== CONTACTO ========== -->
+<section id="contacto" class="contact-v2">
+  <div class="contact-v2-bg"></div>
+  <div class="container">
+    <div class="cv2-grid">
+      <div class="reveal">
+        <span class="cv2-eyebrow"><span class="dot"></span> Contáctanos</span>
+        <h2 class="cv2-title" style="font-family: system-ui">¿Listo para llevar<br/>tu negocio al <span class="gold">siguiente nivel?</span></h2>
+        <p class="cv2-lede">Cuéntanos tu proyecto y te responderemos en menos de 24 horas con una propuesta personalizada. Sin compromisos.</p>
+        <div class="cv2-benefits">
+          <div class="cv2-benefit">
+            <div class="cv2-bico"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polygon points="13 2 3 14 12 14 11 22 21 10 12 10 13 2"/></svg></div>
+            <div><h4>Respuesta rápida</h4><p>Te contactamos en menos de 24 horas.</p></div>
+          </div>
+          <div class="cv2-benefit">
+            <div class="cv2-bico"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 2L4 6v6c0 5 3.5 9 8 10 4.5-1 8-5 8-10V6l-8-4z"/></svg></div>
+            <div><h4>Propuesta personalizada</h4><p>Soluciones hechas a la medida de tu negocio.</p></div>
+          </div>
+          <div class="cv2-benefit">
+            <div class="cv2-bico"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="4" y="11" width="16" height="10" rx="2"/><path d="M8 11V7a4 4 0 0 1 8 0v4"/></svg></div>
+            <div><h4>Sin compromiso</h4><p>Conversamos, te asesoramos y tú decides.</p></div>
+          </div>
+        </div>
+        <a class="cv2-wa" target="_blank" rel="noopener" href="https://wa.me/51944377600?text=Hola%2C%20me%20interesa%20automatizar%20mi%20negocio%20con%20AutoCore%20AI">
+          <span class="ico"><svg viewBox="0 0 32 32" fill="currentColor" width="22" height="22" aria-hidden="true"><path d="M16.003 3C9.374 3 4 8.373 4 15c0 2.367.69 4.573 1.878 6.43L4 29l7.79-1.85A11.95 11.95 0 0 0 16.003 27C22.633 27 28 21.627 28 15S22.633 3 16.003 3zm0 21.6c-1.853 0-3.59-.51-5.078-1.394l-.364-.215-4.62 1.097 1.108-4.5-.236-.376A9.55 9.55 0 0 1 6.4 15c0-5.302 4.3-9.6 9.603-9.6 5.303 0 9.6 4.298 9.6 9.6 0 5.302-4.297 9.6-9.6 9.6zm5.305-7.18c-.29-.146-1.717-.847-1.983-.944-.265-.097-.46-.146-.652.146-.193.29-.748.944-.917 1.137-.17.193-.338.218-.628.072-.29-.145-1.226-.452-2.336-1.44-.864-.77-1.448-1.722-1.617-2.013-.17-.29-.018-.447.127-.592.13-.13.29-.338.435-.508.146-.17.193-.29.29-.483.097-.193.05-.362-.024-.508-.073-.146-.652-1.572-.893-2.153-.235-.566-.475-.49-.652-.498l-.555-.01a1.07 1.07 0 0 0-.773.362c-.265.29-1.013.99-1.013 2.414s1.037 2.8 1.183 2.993c.146.193 2.043 3.12 4.95 4.374.692.298 1.232.476 1.652.61.694.22 1.326.19 1.825.115.557-.083 1.717-.702 1.96-1.38.243-.677.243-1.257.17-1.38-.073-.122-.265-.193-.555-.338z"/></svg></span>
+          <div class="meta">
+            <strong>¿Prefieres escribirnos directo?</strong>
+            <span>Hablemos por WhatsApp y cuéntanos tu idea.</span>
+          </div>
+          <span class="btn btn-outline-gold">Escribir por WhatsApp →</span>
+        </a>
+      </div>
+      <form class="cv2-form reveal d1" id="contactForm">
+
+        <!-- ============================================================
+             ✅ PASO 1: Ve a https://web3forms.com y regístrate gratis
+             ✅ PASO 2: Ingresa tu correo y copia tu Access Key
+             ✅ PASO 3: Reemplaza TU_ACCESS_KEY_AQUÍ con tu clave real
+        ============================================================ -->
+        <input type="hidden" name="access_key" value="3bdd55d3-4f91-4246-a202-567e20ffec8b">
+        <input type="hidden" name="subject"   value="Nuevo contacto desde AutoCore AI">
+        <input type="hidden" name="from_name" value="AutoCore AI Web">
+
+        <div class="cv2-grid2">
+          <div class="cv2-field">
+            <label>Nombre <span class="req">*</span></label>
+            <input class="cv2-input" type="text" name="nombre" placeholder="Tu nombre" required>
+          </div>
+          <div class="cv2-field">
+            <label>Empresa</label>
+            <input class="cv2-input" type="text" name="empresa" placeholder="Tu empresa">
+          </div>
+          <div class="cv2-field">
+            <label>Email <span class="req">*</span></label>
+            <input class="cv2-input" type="email" name="email" placeholder="tu@email.com" required>
+          </div>
+          <div class="cv2-field">
+            <label>WhatsApp <span class="req">*</span></label>
+            <div class="cv2-phone">
+              <span class="flag">🇵🇪 -</span>
+              <input class="cv2-input" type="tel" name="whatsapp" placeholder="+51 999 999 999" required>
+            </div>
+          </div>
+          <div class="cv2-field full">
+            <label>Selecciona un plan o servicio</label>
+            <select class="cv2-select" name="paquete">
+              <option value="">Presiona aquí y selecciona</option>
+              <option value="Core">Core — S/499</option>
+              <option value="Pro">Pro — Desde S/1399+</option>
+              <option value="Business">Business — Cotización personalizada</option>
+              <option value="Business">Publicidad inteligente</option>
+
+            </select>
+          </div>
+          <div class="cv2-field full">
+            <label>Cuéntanos tu proyecto <span class="req">*</span></label>
+            <textarea class="cv2-textarea" name="mensaje" placeholder="Describe brevemente qué necesitas o el objetivo de tu proyecto…" required></textarea>
+          </div>
+        </div>
+
+        <div class="form-msg form-msg-ok" id="formSuccess">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" width="18" height="18" aria-hidden="true"><path d="M20 6L9 17l-5-5"/></svg>
+          ¡Mensaje enviado! Te contactaremos en menos de 24 horas.
+        </div>
+        <div class="form-msg form-msg-err" id="formError">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" width="18" height="18" aria-hidden="true"><circle cx="12" cy="12" r="10"/><path d="M12 8v4m0 4h.01"/></svg>
+          Error al enviar. Intenta nuevamente o escríbenos por WhatsApp.
+        </div>
+
+        <button type="submit" class="btn btn-gold cv2-submit" id="submitBtn">Enviar mensaje →</button>
+        <div class="cv2-foot">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="11" width="18" height="11" rx="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/></svg>
+          Tu información está 100% segura. No compartimos tus datos.
+        </div>
+      </form>
+    </div>
+  </div>
+</section>
+
+<!-- ========== FOOTER ========== -->
+<footer class="foot">
+  <div class="container foot-inner">
+    <div class="logo" style="font-size: 18px; font-family: system-ui">Auto<span class="gold">Core AI</span></div>
+    <div>© 2025 AutoCore AI. Todos los derechos reservados.</div>
+    <div>Lima, Perú</div>
+  </div>
+</footer>
+
+<!-- ========== FLOATING WHATSAPP BUTTON ========== -->
+<a href="https://wa.me/51944377600?text=Hola%2C%20me%20interesa%20mejorar%20mi%20negocio%20con%20AutoCore%20AI"
+   target="_blank" rel="noopener" class="wa-float" aria-label="Escribir por WhatsApp">
+  <svg viewBox="0 0 32 32" fill="currentColor" aria-hidden="true">
+    <path d="M16.003 3C9.374 3 4 8.373 4 15c0 2.367.69 4.573 1.878 6.43L4 29l7.79-1.85A11.95 11.95 0 0 0 16.003 27C22.633 27 28 21.627 28 15S22.633 3 16.003 3zm0 21.6c-1.853 0-3.59-.51-5.078-1.394l-.364-.215-4.62 1.097 1.108-4.5-.236-.376A9.55 9.55 0 0 1 6.4 15c0-5.302 4.3-9.6 9.603-9.6 5.303 0 9.6 4.298 9.6 9.6 0 5.302-4.297 9.6-9.6 9.6zm5.305-7.18c-.29-.146-1.717-.847-1.983-.944-.265-.097-.46-.146-.652.146-.193.29-.748.944-.917 1.137-.17.193-.338.218-.628.072-.29-.145-1.226-.452-2.336-1.44-.864-.77-1.448-1.722-1.617-2.013-.17-.29-.018-.447.127-.592.13-.13.29-.338.435-.508.146-.17.193-.29.29-.483.097-.193.05-.362-.024-.508-.073-.146-.652-1.572-.893-2.153-.235-.566-.475-.49-.652-.498l-.555-.01a1.07 1.07 0 0 0-.773.362c-.265.29-1.013.99-1.013 2.414s1.037 2.8 1.183 2.993c.146.193 2.043 3.12 4.95 4.374.692.298 1.232.476 1.652.61.694.22 1.326.19 1.825.115.557-.083 1.717-.702 1.96-1.38.243-.677.243-1.257.17-1.38-.073-.122-.265-.193-.555-.338z"/>
+  </svg>
+  <span class="wa-tip">Chatea con nosotros</span>
+</a>
+
+<style>
+.wa-float{
+  position:fixed;
+  right:28px;bottom:28px;
+  width:64px;height:64px;
+  border-radius:50%;
+  background:#25D366;
+  color:#fff;
+  display:flex;align-items:center;justify-content:center;
+  z-index:9000;
+  box-shadow:
+    0 12px 28px -6px rgba(37,211,102,.55),
+    0 6px 18px -4px rgba(0,0,0,.45),
+    0 0 0 0 rgba(37,211,102,.45);
+  transition:transform .3s ease, box-shadow .3s ease;
+  cursor:none;
+  animation:waFloatPulse 2.4s ease-in-out infinite;
+}
+@media (hover:none){ .wa-float{cursor:pointer} }
+.wa-float svg{width:32px;height:32px}
+.wa-float:hover{
+  transform:translateY(-3px) scale(1.06);
+  box-shadow:
+    0 18px 40px -6px rgba(37,211,102,.7),
+    0 8px 22px -4px rgba(0,0,0,.5),
+    0 0 0 8px rgba(37,211,102,.18);
+}
+@keyframes waFloatPulse{
+  0%,100%{box-shadow:0 12px 28px -6px rgba(37,211,102,.55),0 6px 18px -4px rgba(0,0,0,.45),0 0 0 0 rgba(37,211,102,.45)}
+  50%    {box-shadow:0 12px 28px -6px rgba(37,211,102,.55),0 6px 18px -4px rgba(0,0,0,.45),0 0 0 14px rgba(37,211,102,0)}
+}
+.wa-tip{
+  position:absolute;right:78px;top:50%;transform:translateY(-50%) translateX(8px);
+  background:rgba(1,25,41,.92);
+  color:var(--ink);
+  border:1px solid var(--gold-line);
+  font-size:13px;font-weight:500;letter-spacing:.01em;
+  padding:9px 14px;border-radius:10px;
+  white-space:nowrap;
+  opacity:0;pointer-events:none;
+  transition:opacity .25s ease, transform .25s ease;
+  backdrop-filter:blur(8px);
+  box-shadow:0 10px 24px -8px rgba(0,0,0,.5);
+}
+.wa-tip::after{
+  content:"";position:absolute;left:100%;top:50%;transform:translateY(-50%);
+  border:6px solid transparent;border-left-color:rgba(1,25,41,.92);
+}
+.wa-float:hover .wa-tip{opacity:1;transform:translateY(-50%) translateX(0)}
+@media (max-width:560px){
+  .wa-float{right:18px;bottom:18px;width:58px;height:58px}
+  .wa-float svg{width:28px;height:28px}
+  .wa-tip{display:none}
+}
+
+/* ================================================================
+   VIDEO EMBED — DEMOS EN ACCIÓN
+================================================================ */
+.demo-video-wrap{
+  position:relative;
+  padding-bottom:56.25%; /* 16:9 */
+  height:0;
+  overflow:hidden;
+  background:#000;
+  border-radius:var(--r-md) var(--r-md) 0 0;
+}
+.demo-video-wrap iframe{
+  position:absolute;
+  top:0;left:0;
+  width:100%;height:100%;
+  border:0;
+}
+.demo-meta{
+  display:flex;
+  flex-direction:column;
+  gap:12px;
+  padding:22px 24px;
+}
+.demo-meta h3{font-size:19px;margin:0}
+.demo-meta p{color:var(--ink-dim);font-size:14px;margin:0}
+.demo-cta{
+  align-self:flex-start;
+  font-size:13px;
+  padding:10px 18px;
+  margin-top:4px;
+}
+
+/* ================================================================
+   PRECIOS — NUEVOS ELEMENTOS
+================================================================ */
+.plan-price-sub{
+  font-size:11.5px;color:var(--ink-dim);
+  letter-spacing:.2em;text-transform:uppercase;font-weight:500;
+  margin-top:-8px;margin-bottom:6px;
+}
+.plan-price-text{
+  font-family:'Syne',sans-serif;font-weight:800;
+  font-size:clamp(24px,2.8vw,32px);
+  letter-spacing:-.02em;color:var(--ink);line-height:1.15;
+  margin:2px 0 6px;
+}
+.plan-addon{
+  margin-top:4px;margin-bottom:10px;
+  padding:14px 16px;border-radius:12px;
+  background:#ffb70309;border:1px solid var(--gold-line);
+}
+.plan-addon-title{
+  font-size:12.5px;color:var(--ink-dim);
+  font-weight:500;margin-bottom:10px;
+}
+.plan-addon-title span{color:var(--gold);font-weight:600}
+.plan-addon-list{
+  list-style:none;display:flex;flex-direction:column;gap:6px;
+}
+.plan-addon-list li{
+  font-size:12.5px;color:var(--ink-dim);
+  display:flex;align-items:center;gap:8px;
+}
+.plan-addon-list li::before{
+  content:"·";color:var(--gold);
+  font-weight:800;font-size:18px;line-height:1;flex-shrink:0;
+}
+.pricing-addon{
+  margin-top:44px;
+  display:grid;
+  grid-template-columns:1fr 1fr auto;
+  gap:40px;align-items:start;
+  padding:38px 44px;
+  border-radius:var(--r-lg);
+  background:var(--navy-card-2);
+  border:1px solid var(--gold-line);
+  position:relative;overflow:hidden;
+}
+.pricing-addon::before{
+  content:"";position:absolute;top:0;left:0;right:0;height:2px;
+  background:linear-gradient(90deg,transparent,var(--gold),transparent);
+}
+.pricing-addon-h3{
+  font-size:clamp(20px,2.4vw,28px);
+  letter-spacing:-.02em;margin-bottom:10px;
+}
+.pricing-addon-desc{
+  color:var(--ink-dim);font-size:15px;max-width:42ch;
+}
+.pricing-addon-note{
+  font-size:11.5px;color:var(--ink-dim);
+  margin-top:14px;font-style:italic;opacity:.65;
+}
+.pricing-addon-ul{
+  list-style:none;display:flex;flex-direction:column;gap:11px;padding-top:4px;
+}
+.pricing-addon-ul li{
+  display:flex;align-items:center;gap:10px;font-size:14px;color:#dbe3e8;
+}
+.pricing-addon-prices{
+  display:flex;flex-direction:column;gap:16px;min-width:200px;
+}
+.pricing-addon-price-item{display:flex;flex-direction:column;gap:5px}
+.pricing-addon-label{
+  font-size:11px;color:var(--ink-dim);
+  letter-spacing:.18em;text-transform:uppercase;font-weight:500;
+}
+.pricing-addon-amount{
+  font-family:'Syne',sans-serif;font-weight:800;
+  font-size:30px;color:var(--gold);letter-spacing:-.02em;
+}
+.pricing-addon-amount-sm{font-size:20px}
+.pricing-addon-mes{font-size:13px;color:var(--ink-dim);font-weight:400}
+.pricing-addon-divider{height:1px;background:#ffffff0f}
+@media (max-width:980px){
+  .pricing-addon{grid-template-columns:1fr;gap:28px;padding:28px 24px}
+  .pricing-addon-prices{min-width:unset}
+}
+
+/* Opción pago mensual — Plan Core */
+.plan-pay-monthly{
+  margin-top:4px;margin-bottom:10px;
+  padding:14px 16px;border-radius:12px;
+  background:#ffb70309;border:1px solid var(--gold-line);
+}
+.plan-pay-or{
+  display:block;font-size:11px;
+  color:var(--gold);letter-spacing:.2em;
+  text-transform:uppercase;font-weight:600;
+  margin-bottom:6px;
+}
+.plan-pay-monthly-price{
+  font-family:'Syne',sans-serif;font-weight:800;
+  font-size:26px;color:var(--gold);
+  letter-spacing:-.02em;margin-bottom:8px;line-height:1;
+}
+.plan-pay-monthly-price span{
+  font-size:13px;color:var(--ink-dim);font-weight:400;
+}
+.plan-pay-monthly-label{
+  display:block;font-size:11.5px;
+  color:var(--ink-dim);font-weight:500;
+  margin-bottom:8px;
+}
+
+/* Trust strip */
+.plans-trust{
+  display:flex;align-items:center;justify-content:center;
+  flex-wrap:wrap;gap:10px 20px;
+  margin-top:32px;margin-bottom:8px;
+  padding:18px 24px;
+  border-radius:12px;
+  background:#ffffff05;
+  border:1px solid #ffffff0a;
+}
+.plans-trust span{
+  display:inline-flex;align-items:center;gap:7px;
+  font-size:13px;color:var(--ink-dim);font-weight:400;
+}
+.plans-trust svg{color:var(--gold);flex-shrink:0}
+.plans-trust-dot{color:#ffffff22;font-size:18px;line-height:1}
+@media (max-width:600px){
+  .plans-trust-dot{display:none}
+  .plans-trust{gap:10px 14px}
+}
+
+/* ================================================================
+   FORM MESSAGES
+================================================================ */
+.form-msg{
+  display:none;align-items:center;gap:10px;
+  padding:14px 18px;border-radius:12px;
+  font-size:14px;font-weight:500;
+  margin-bottom:10px;
+  line-height:1.4;
+}
+.form-msg-ok{
+  background:rgba(37,211,102,.1);
+  border:1px solid rgba(37,211,102,.3);
+  color:#25D366;
+}
+.form-msg-err{
+  background:rgba(255,100,100,.08);
+  border:1px solid rgba(255,100,100,.25);
+  color:#ff7070;
+}
+.cv2-submit:disabled{opacity:.65;cursor:not-allowed}
+</style>
+
+<!-- ================================================================
+     SCRIPTS
+================================================================ -->
+<script>
+/* ---------- Custom cursor ---------- */
+(() => {
+  const dot = document.getElementById('cdot');
+  const ring = document.getElementById('cring');
+  if (!dot || matchMedia('(hover:none)').matches) return;
+  let x=innerWidth/2,y=innerHeight/2,rx=x,ry=y;
+  addEventListener('mousemove',e=>{x=e.clientX;y=e.clientY;dot.style.transform=`translate(${x}px,${y}px) translate(-50%,-50%)`;});
+  function loop(){
+    rx += (x-rx)*0.18; ry += (y-ry)*0.18;
+    ring.style.transform=`translate(${rx}px,${ry}px) translate(-50%,-50%)`;
+    requestAnimationFrame(loop);
+  }
+  loop();
+  document.querySelectorAll('a,button,.svc-card,.demo-card,.plan').forEach(el=>{
+    el.addEventListener('mouseenter',()=>ring.classList.add('hover'));
+    el.addEventListener('mouseleave',()=>ring.classList.remove('hover'));
+  });
+})();
+
+/* ---------- Nav scrolled state ---------- */
+(() => {
+  const nav = document.getElementById('nav');
+  const onScroll = () => nav.classList.toggle('scrolled', scrollY > 24);
+  onScroll();
+  addEventListener('scroll', onScroll, {passive:true});
+})();
+
+/* ---------- Particles ---------- */
+(() => {
+  const wrap = document.getElementById('particles');
+  if (!wrap) return;
+  const N = 22;
+  for (let i=0;i<N;i++){
+    const p = document.createElement('span');
+    p.className = 'particle';
+    const size = 2 + Math.random()*2.5;
+    const op = .12 + Math.random()*.28;
+    const dur = 14 + Math.random()*16;
+    const delay = -Math.random()*dur;
+    p.style.width = p.style.height = size+'px';
+    p.style.left = (Math.random()*100)+'%';
+    p.style.top = (90 + Math.random()*30)+'%';
+    p.style.setProperty('--op', op);
+    p.style.setProperty('--dx', ((Math.random()-.5)*120|0)+'px');
+    p.style.animationDuration = dur+'s';
+    p.style.animationDelay = delay+'s';
+    wrap.appendChild(p);
+  }
+})();
+
+/* ---------- Reveal on scroll ---------- */
+(() => {
+  const io = new IntersectionObserver((entries)=>{
+    entries.forEach(e=>{
+      if (e.isIntersecting){
+        e.target.classList.add('in');
+        if (e.target.classList.contains('process')) e.target.classList.add('in-view');
+        io.unobserve(e.target);
+      }
+    });
+  },{threshold:.12});
+  document.querySelectorAll('.reveal,#process').forEach(el=>io.observe(el));
+})();
+
+/* ---------- Counters ---------- */
+(() => {
+  const ease = t => 1 - Math.pow(1-t,3);
+  const animate = (el) => {
+    const to = +el.dataset.to;
+    const dur = 1500;
+    const t0 = performance.now();
+    function step(t){
+      const k = Math.min(1,(t-t0)/dur);
+      el.textContent = Math.round(to*ease(k));
+      if (k<1) requestAnimationFrame(step);
+    }
+    requestAnimationFrame(step);
+  };
+  const io = new IntersectionObserver((entries)=>{
+    entries.forEach(e=>{ if (e.isIntersecting){ animate(e.target); io.unobserve(e.target); } });
+  },{threshold:.4});
+  document.querySelectorAll('.counter').forEach(el=>io.observe(el));
+})();
+
+/* ---------- Typing in badge ---------- */
+(() => {
+  const el = document.getElementById('typed-text');
+  const caret = document.getElementById('caret');
+  if (!el) return;
+  const text = 'Automatizamos negocios que quieren crecer';
+  let i=0;
+  const tick = () => {
+    el.textContent = text.slice(0, i++);
+    if (i<=text.length) setTimeout(tick, 38);
+    else setTimeout(()=>caret && caret.classList.add('gone'), 1400);
+  };
+  setTimeout(tick, 350);
+})();
+
+/* ---------- Contact form — Web3Forms ---------- */
+(() => {
+  const form = document.getElementById('contactForm');
+  if (!form) return;
+  const btn = document.getElementById('submitBtn');
+  const ok  = document.getElementById('formSuccess');
+  const err = document.getElementById('formError');
+
+  form.addEventListener('submit', async (e) => {
+    e.preventDefault();
+    ok.style.display  = 'none';
+    err.style.display = 'none';
+    btn.textContent   = 'Enviando…';
+    btn.disabled      = true;
+
+    const payload = Object.fromEntries(new FormData(form).entries());
+
+    try {
+      const res    = await fetch('https://api.web3forms.com/submit', {
+        method : 'POST',
+        headers: { 'Content-Type': 'application/json', Accept: 'application/json' },
+        body   : JSON.stringify(payload),
+      });
+      const result = await res.json();
+      if (result.success) {
+        ok.style.display = 'flex';
+        form.reset();
+        btn.textContent = 'Mensaje enviado ✓';
+      } else {
+        throw new Error(result.message);
+      }
+    } catch (_) {
+      err.style.display = 'flex';
+      btn.textContent   = 'Enviar mensaje →';
+      btn.disabled      = false;
+    }
+  });
+})();
+
+/* ---------- Active nav link via IntersectionObserver ---------- */
+(() => {
+  const links = [...document.querySelectorAll('.nav-links a')];
+  const map = new Map(links.map(a=>[a.dataset.target,a]));
+  const sections = ['servicios','proceso','demos','precios','contacto']
+    .map(id=>document.getElementById(id)).filter(Boolean);
+  const io = new IntersectionObserver((entries)=>{
+    entries.forEach(e=>{
+      if (e.isIntersecting){
+        links.forEach(a=>a.classList.remove('active'));
+        const a = map.get(e.target.id);
+        if (a) a.classList.add('active');
+      }
+    });
+  },{rootMargin:'-40% 0px -55% 0px',threshold:0});
+  sections.forEach(s=>io.observe(s));
+})();
+</script>
+</body>
+</html>
